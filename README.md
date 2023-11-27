@@ -3,11 +3,11 @@
 <head>
 </head>
 <body>
-<h1>>HarvestLink</h1>
+<h1>HarvestLink</h1>
 <p>Harvestlink is an innovative platform connecting farmers to markets, streamlining the agricultural supply chain.</p>
 <h2>Overview</h2>
-<p>Harvestlink aims to revolutionize the agricultural industry by providing a digital platform that facilitates seamless interaction between farmers and markets. The platform offers features for inventory management, market analysis, and real-time connectivity to optimize the agricultural supply chain.
-HarvestLink is meant to connect the farmer and consumer at the table. This is by directly providing an online market where the consumer purchases the farm produce directly from the farm without any intermediaries</p>
+<p>Harvestlink aims to revolutionize the agricultural industry by providing a digital platform that facilitates seamless interaction between farmers and markets. The platform offers features for inventory management, market analysis, and real-time connectivity to optimize the agricultural supply chain.</p>
+<p>HarvestLink is meant to connect the farmer and consumer at the table. This is by directly providing an online market where the consumer purchases the farm produce directly from the farm without any intermediaries</p>
 <h2>Features</h2>
 <ul>
 <li>Inventory Management: Track and manage agricultural produce, storage, and distribution.</li>
@@ -38,6 +38,7 @@ HarvestLink is meant to connect the farmer and consumer at the table. This is by
 <ol>
 <li>Grace Kamondo kamondograce@gmail.com</li>
 <li>Evans Sese evanssese166@gmail.com</li>
+</ol>
 <h2>Acknowledgements</h2>
 <p>Special thanks to our mentors and contributors for their invaluable insights and support during the development of Harvestlink.</p>
 </body>
