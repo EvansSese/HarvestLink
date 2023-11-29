@@ -2,6 +2,7 @@
 body {
     font-family: 'Roboto', sans-serif;
     margin: 24px;
+    background-color: chartreuse;
 }
 
 form {
