@@ -20,8 +20,17 @@
     <script src="{{ url_for('static', filename='scripts/password-validation.js') }}"></script>
 </head>
 <body>
-    <h1>Farmer Registration</h1>
+    <h1>Register</h1>
     <form action="/save_farmer" method="post" onsubmit="return validatePassword()">
+        </form>
+        <div>
+        <select>
+        <option value="">Select</option>
+        <option value="1">Farmer</option>
+        <option value="2">Consumer</option>
+        </select>
+        </div>
+
         <div class="mb-3">
             <label for="name" class="form-label">Name:</label>
             <input type="text" id="name" name="name" class="form-control" required>
@@ -52,7 +61,7 @@
             <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Save Farmer</button>
+        <button type="submit" class="btn btn-primary">Save</button>
     </form>
 </body>
 </html>
