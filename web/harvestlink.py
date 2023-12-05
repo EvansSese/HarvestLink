@@ -17,6 +17,11 @@ db_storage = DatabaseStorage()
 
 @app.route('/')
 def index():
+    if 'user_id' in user_session:
+        return render_template('index.html',
+                               name=user_session['user_name'],
+                               email=user_session['user_email'],
+                               authenticated=user_session['authenticated'])
     return render_template('index.html')
 
 
@@ -63,6 +68,7 @@ def login():
         farmer = authenticate_farmer(email, password)
 
         if farmer:
+            user_session['authenticated'] = True
             user_session['user_id'] = farmer.id
             user_session['user_name'] = farmer.name
             user_session['user_email'] = farmer.email
@@ -70,6 +76,7 @@ def login():
         else:
             consumer = authenticate_consumer(email, password)
             if consumer:
+                user_session['authenticated'] = True
                 user_session['user_id'] = consumer.id
                 user_session['user_name'] = consumer.name
                 user_session['user_email'] = consumer.email
@@ -98,7 +105,6 @@ def dashboard():
                                email=user_session['user_email'])
     else:
         return redirect(url_for('login'))
-
 
 
 def authenticate_farmer(email, password):
