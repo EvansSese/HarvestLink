@@ -26,6 +26,11 @@ class HarvestLinkConsole(cmd.Cmd):
         """Run consumers.py to create the 'consumers' table."""
         subprocess.run(["python", "models/consumers.py"])
 
+
+    def do_create_products_table(self, arg):
+        """Run consumers.py to create the 'consumers' table."""
+        subprocess.run(["python", "models/products.py"])
+
     def do_exit(self, arg):
         """Exit the program."""
         print("Exiting.")

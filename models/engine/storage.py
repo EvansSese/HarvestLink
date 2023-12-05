@@ -13,7 +13,7 @@ class DatabaseStorage:
         self.mysql_url = (f"mysql+mysqlconnector://"
                           f"{self.db_username}:{self.db_password}@"
                           f"{self.db_host}:{self.db_port}/{self.db_name}")
-        self.engine = create_engine(self.mysql_url, pool_pre_ping=True)
+        self.engine = create_engine(self.mysql_url, echo=True, pool_pre_ping=True)
         self.Session = sessionmaker(bind=self.engine)
 
     def get_session(self):
