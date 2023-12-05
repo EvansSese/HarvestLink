@@ -102,7 +102,8 @@ def dashboard():
     if 'user_id' in user_session:
         return render_template('dashboard.html',
                                name=user_session['user_name'],
-                               email=user_session['user_email'])
+                               email=user_session['user_email'],
+                               authenticated=user_session['authenticated'])
     else:
         return redirect(url_for('login'))
 
