@@ -1,17 +1,17 @@
-<!-- farmer-register.html -->
+<!-- register.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register Farmer</title>
+    <title>Register</title>
 
     <!-- Bootstrap stylesheets (from CDN) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- HarvestLink CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/farmer-register.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/register.css') }}">
 
     <!-- Bootstrap scripts (from CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -21,14 +21,14 @@
 </head>
 <body>
     <h1>Register</h1>
-    <form action="/save_farmer" method="post" onsubmit="return validatePassword()">
-        </form>
-        <div>
-        <select>
-        <option value="">Select</option>
-        <option value="1">Farmer</option>
-        <option value="2">Consumer</option>
-        </select>
+    <form action="/save" method="post" onsubmit="return validatePassword()">
+        <div class="mb-3">
+            <label for="account-type" class="form-label">Register as:</label>
+            <select class="form-select" aria-label="Default select example" id="account-type" name="account-type" required>
+              <option selected></option>
+              <option value="farmer">Farmer</option>
+              <option value="consumer">Consumer</option>
+            </select>
         </div>
 
         <div class="mb-3">
@@ -61,7 +61,10 @@
             <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Save</button>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+
     </form>
 </body>
 </html>

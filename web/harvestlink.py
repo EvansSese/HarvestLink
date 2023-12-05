@@ -17,14 +17,15 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/farmer-register')
+@app.route('/register')
 def register_farmer():
-    return render_template('farmer-register.html')
+    return render_template('register.html')
 
 
-@app.route('/save_farmer', methods=['POST'])
-def save_farmer():
+@app.route('/save', methods=['POST'])
+def save():
     u_id = str(uuid.uuid4())
+    acc = request.form['account-type']
     name = request.form['name']
     email = request.form['email']
     phone = request.form['phone']
@@ -34,14 +35,17 @@ def save_farmer():
     # Create a session to interact with the database
     session = db_storage.get_session()
 
-    # Add the farmer to the 'farmers' table
-    add_farmer(session, u_id=u_id, name=name, email=email, phone=phone,
-               location=location, password=password)
+    if acc == "farmer":
+        # Add the farmer to the 'farmers' table
+        add_farmer(session, u_id=u_id, name=name, email=email, phone=phone,
+                   location=location, password=password)
+    else:
+        print('Consumer')
 
     return redirect(url_for('index'))
 
 
-@app.route('/farmer-login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def farmer_login():
     if request.method == 'POST':
         # Get the email and password from the form
@@ -54,9 +58,9 @@ def farmer_login():
         if farmer:
             return redirect(url_for('farmer_dashboard', name=farmer.name))
         else:
-            return render_template('farmer-login.html', error_message="Incorrect credentials")
+            return render_template('login.html', error_message="Incorrect credentials")
 
-    return render_template('farmer-login.html')
+    return render_template('login.html')
 
 
 @app.route('/farmer-dashboard/<name>')
