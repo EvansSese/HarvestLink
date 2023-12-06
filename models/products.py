@@ -26,15 +26,15 @@ class Product(Base):
                 f"quantity={self.quantity}, farmer_id={self.farmer_id})>")
 
 
-def add_product(session, u_id, name, category, price, location, quantity,
-                farmer_id, created_at, updated_at):
-    """Add a new farmer to the 'farmers' table."""
-    new_product = Product(id=u_id, name=name, category=category, price=price,
-                          location=location, quantity=quantity,
-                          farmer_id=farmer_id,created_at=created_at,
-                          updated_at=updated_at)
-    session.add(new_product)
-    session.commit()
+    def add_product(session, u_id, name, category, price, location, quantity,
+                    farmer_id, created_at, updated_at):
+        """Add a new farmer to the 'farmers' table."""
+        new_product = Product(id=u_id, name=name, category=category, price=price,
+                              location=location, quantity=quantity,
+                              farmer_id=farmer_id,created_at=created_at,
+                              updated_at=updated_at)
+        session.add(new_product)
+        session.commit()
 
 
 if __name__ == "__main__":

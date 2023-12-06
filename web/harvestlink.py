@@ -8,7 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from models.farmers import Farmer
 from models.consumers import add_consumer, Consumer
 from models.engine.storage import DatabaseStorage
-from models.products import add_product, Product
+from models.products import Product
 
 app = Flask(__name__)
 app.secret_key = 'hl_user_session'
@@ -19,13 +19,21 @@ db_storage = DatabaseStorage()
 
 @app.route('/')
 def index():
+    # get all products
+    products = (
+        db_storage.get_session()
+        .query(Product, Farmer)
+        .join(Farmer, Product.farmer_id == Farmer.id)
+        .all()
+    )
     if 'user_id' in user_session:
         return render_template('index.html',
                                name=user_session['user_name'],
                                email=user_session['user_email'],
-                               authenticated=user_session['authenticated'])
+                               authenticated=user_session['authenticated'],
+                               products=products)
 
-    return render_template('index.html')
+    return render_template('index.html', products=products)
 
 
 @app.route('/register')
@@ -50,7 +58,7 @@ def save():
         # Add the farmer to the 'farmers' table
         Farmer.add_farmer(session, u_id, name, email, phone,
                    location, password)
-        return redirect(url_for('index'))
+        return redirect(url_for('dashboard'))
     elif acc == "consumer":
         # Add the consumer to the 'consumers' table
         add_consumer(session, u_id, name, email, phone,
@@ -136,7 +144,7 @@ def add_new_product():
     # Create a session to interact with the database
     session = db_storage.get_session()
 
-    add_product(session, u_id, name, category, price,
+    Product.add_product(session, u_id, name, category, price,
                 location, quantity, farmer_id, created_at, updated_at)
     return redirect(url_for('dashboard'))
 
