@@ -4,6 +4,7 @@ from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import session as user_session
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import Session
 
 from models.farmers import Farmer
 from models.consumers import add_consumer, Consumer
@@ -57,7 +58,7 @@ def save():
     if acc == "farmer":
         # Add the farmer to the 'farmers' table
         Farmer.add_farmer(session, u_id, name, email, phone,
-                   location, password)
+                          location, password)
         return redirect(url_for('dashboard'))
     elif acc == "consumer":
         # Add the consumer to the 'consumers' table
@@ -116,7 +117,8 @@ def dashboard():
                                 .filter_by(id=user_session['user_id']).first())
         if authenticated_farmer:
             # Get the products added by the farmer
-            products = authenticated_farmer.get_products(db_storage.get_session())
+            products = authenticated_farmer.get_products(
+                db_storage.get_session())
             return render_template('dashboard.html',
                                    name=user_session['user_name'],
                                    email=user_session['user_email'],
@@ -145,8 +147,44 @@ def add_new_product():
     session = db_storage.get_session()
 
     Product.add_product(session, u_id, name, category, price,
-                location, quantity, farmer_id, created_at, updated_at)
+                        location, quantity, farmer_id, created_at, updated_at)
     return redirect(url_for('dashboard'))
+
+
+@app.route('/delete_product/<product_id>', methods=['POST', 'GET'])
+def delete_product(product_id):
+    try:
+        # Check if the user is logged in
+        if 'user_id' not in user_session:
+            flash('You need to be logged in to delete a product', 'error')
+            return redirect(url_for('login'))
+
+        # Get the authenticated farmer
+        authenticated_farmer = (db_storage.get_session().query(Farmer)
+                                .filter_by(id=user_session['user_id']).first())
+
+        # Check if the authenticated farmer exists
+        if not authenticated_farmer:
+            flash('Authenticated farmer not found', 'error')
+            return redirect(url_for('login'))
+
+        # Attempt to delete the product
+        result = Product.delete_product(db_storage.get_session(),
+                                        product_id=product_id,
+                                        farmer_id=authenticated_farmer.id
+                                        )
+        if result:
+            flash('Product deleted successfully', 'success')
+            return redirect(url_for('dashboard'))
+        else:
+            flash('Product not found or does not belong to the authenticated '
+                  'farmer', 'error')
+            return redirect(url_for('dashboard'))
+
+    except SQLAlchemyError as e:
+        flash(f"Error deleting product: {e}", 'error')
+
+    return redirect(url_for('farmer_dashboard'))
 
 
 def authenticate_farmer(email, password):

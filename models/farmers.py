@@ -1,8 +1,8 @@
 from datetime import datetime
 from models import Base
 from models.engine.storage import DatabaseStorage
-from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.orm import declarative_base, Session
+from sqlalchemy import Column, String, DateTime
+from sqlalchemy.orm import Session
 from models.products import Product
 
 

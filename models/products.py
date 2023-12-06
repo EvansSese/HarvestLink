@@ -1,7 +1,9 @@
+from sqlalchemy.exc import SQLAlchemyError
+
 from models import Base
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Session
 from models.engine.storage import DatabaseStorage
 
 
@@ -25,16 +27,39 @@ class Product(Base):
         return (f"<Product(id={self.id}, name={self.name}, price={self.price}, "
                 f"quantity={self.quantity}, farmer_id={self.farmer_id})>")
 
-
     def add_product(session, u_id, name, category, price, location, quantity,
                     farmer_id, created_at, updated_at):
         """Add a new farmer to the 'farmers' table."""
-        new_product = Product(id=u_id, name=name, category=category, price=price,
+        new_product = Product(id=u_id, name=name, category=category,
+                              price=price,
                               location=location, quantity=quantity,
-                              farmer_id=farmer_id,created_at=created_at,
+                              farmer_id=farmer_id, created_at=created_at,
                               updated_at=updated_at)
         session.add(new_product)
         session.commit()
+
+    @classmethod
+    def delete_product(cls, session: Session, product_id, farmer_id) -> bool:
+        """
+        Delete a product with the given ID belonging to the specified farmer.
+        Returns True if the deletion is successful, False otherwise.
+        """
+        try:
+            product_to_delete = (
+                session.query(cls)
+                .filter_by(id=product_id, farmer_id=farmer_id)
+                .first()
+            )
+
+            if product_to_delete:
+                session.delete(product_to_delete)
+                session.commit()
+                return True
+
+        except SQLAlchemyError as e:
+            print(f"Error deleting product: {e}")
+
+        return False
 
 
 if __name__ == "__main__":
