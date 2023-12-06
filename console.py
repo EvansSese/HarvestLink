@@ -1,8 +1,6 @@
 import cmd
 import subprocess
-
 from sqlalchemy import inspect
-
 from models.engine.storage import DatabaseStorage
 
 
@@ -26,10 +24,13 @@ class HarvestLinkConsole(cmd.Cmd):
         """Run consumers.py to create the 'consumers' table."""
         subprocess.run(["python", "models/consumers.py"])
 
-
     def do_create_products_table(self, arg):
-        """Run consumers.py to create the 'consumers' table."""
+        """Run products.py to create the 'products' table."""
         subprocess.run(["python", "models/products.py"])
+
+    def do_create_cart_table(self, arg):
+        """Run cart.py to create the 'cart' table."""
+        subprocess.run(["python", "models/cart.py"])
 
     def do_exit(self, arg):
         """Exit the program."""

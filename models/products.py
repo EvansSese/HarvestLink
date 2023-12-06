@@ -1,5 +1,4 @@
 from sqlalchemy.exc import SQLAlchemyError
-
 from models import Base
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
@@ -96,7 +95,7 @@ if __name__ == "__main__":
     # Initialize the DatabaseStorage
     db_storage = DatabaseStorage()
 
-    # Create the 'farmers' table if it doesn't exist
+    # Create the 'products' table if it doesn't exist
     Base.metadata.create_all(db_storage.engine)
 
     # Create a session to interact with the database

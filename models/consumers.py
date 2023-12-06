@@ -1,9 +1,7 @@
 from datetime import datetime
+from models import Base
 from models.engine.storage import DatabaseStorage
-from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.orm import declarative_base
-
-Base = declarative_base()
+from sqlalchemy import Column, String, DateTime
 
 
 class Consumer(Base):
@@ -22,7 +20,7 @@ class Consumer(Base):
 def add_consumer(session, u_id, name, email, phone, location, password):
     """Add a new consumer to the 'consumers' table."""
     new_consumer = Consumer(id=u_id, name=name, email=email, phone=phone,
-                          location=location, password=password)
+                            location=location, password=password)
     session.add(new_consumer)
     session.commit()
 
@@ -31,7 +29,7 @@ if __name__ == "__main__":
     # Initialize the DatabaseStorage
     db_storage = DatabaseStorage()
 
-    # Create the 'farmers' table if it doesn't exist
+    # Create the 'consumers' table if it doesn't exist
     Base.metadata.create_all(db_storage.engine)
 
     # Create a session to interact with the database
