@@ -6,6 +6,7 @@ from flask import session as user_session
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
+from models.cart import Cart
 from models.farmers import Farmer
 from models.consumers import add_consumer, Consumer
 from models.engine.storage import DatabaseStorage
@@ -31,6 +32,7 @@ def index():
         return render_template('index.html',
                                name=user_session['user_name'],
                                email=user_session['user_email'],
+                               id=user_session['user_id'],
                                authenticated=user_session['authenticated'],
                                products=products)
 
@@ -242,6 +244,52 @@ def delete_product(product_id):
         flash(f"Error deleting product: {e}", 'error')
 
     return redirect(url_for('farmer_dashboard'))
+
+
+@app.route('/add_item', methods=['POST'])
+def add_item_to_cart():
+    try:
+        # Check if the user is logged in
+        if 'user_id' not in user_session:
+            flash('You need to be logged in to add items to the cart', 'error')
+            return redirect(url_for('login'))
+
+        # Get the authenticated consumer
+        authenticated_consumer = (db_storage.get_session().query(Consumer)
+                                  .filter_by(id=user_session['user_id'])
+                                  .first())
+
+        # Check if the authenticated consumer exists
+        if not authenticated_consumer:
+            flash('Authenticated consumer not found', 'error')
+            return redirect(url_for('login'))
+
+        # Get the form data
+        id = str(uuid.uuid4())
+        product_id = request.form['product_id']
+        quantity = int(request.form['quantity'])
+        consumer_id = request.form['consumer_id']
+        created_at = datetime.now()
+        updated_at = datetime.now()
+
+        # Use the add_item method from the Cart class
+        if Cart.add_item(db_storage.get_session(), u_id=id,
+                         product_id=product_id,
+                         consumer_id=consumer_id,
+                         quantity=quantity,
+                         created_at=created_at,
+                         updated_at=updated_at):
+            flash('Item added to cart successfully', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Error adding item to cart', 'error')
+
+        return redirect(url_for('index'))
+
+    except SQLAlchemyError as e:
+        flash(f"Error adding item to cart: {e}", 'error')
+
+    return redirect(url_for('index'))
 
 
 def authenticate_farmer(email, password):

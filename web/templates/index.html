@@ -70,6 +70,7 @@
     <div class="container">
       <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
           {% for product, farmer in products %}
+          <form action="add_item" method="post">
           <div class="col">
             <div class="p-3">
               <div class="card">
@@ -78,11 +79,15 @@
                     <h5 class="card-title">{{ product.name }}</h5>
                     <p class="card-text justify-content-left">Fresh {{product.name }} in {{ product.location }} at {{ product.price }} per kg</p>
                       <p class="card-text justify-content-left">Farmer: {{ farmer.name }}</p>
-                    <a href="#" class="card-link btn btn-success">Add to cart</a>
+                      <input type="hidden" id="product_id" name="product_id" value="{{ product.id }}">
+                      <input type="hidden" id="consumer_id" name="consumer_id" value="{{ id }}">
+                      <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1" required><br>
+                    <button type="submit" class="card-link btn btn-success">Add to Cart</button>
                   </div>
               </div>
             </div>
           </div>
+          </form>
           {% endfor %}
       </div>
     </div>
