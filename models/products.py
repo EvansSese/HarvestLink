@@ -1,8 +1,7 @@
-# products.py
+from models import Base
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from models.farmers import Base
 from models.engine.storage import DatabaseStorage
 
 

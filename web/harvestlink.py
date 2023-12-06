@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import session as user_session
 from sqlalchemy.exc import SQLAlchemyError
 
-from models.farmers import add_farmer, Farmer
+from models.farmers import Farmer
 from models.consumers import add_consumer, Consumer
 from models.engine.storage import DatabaseStorage
 from models.products import add_product, Product
@@ -24,6 +24,7 @@ def index():
                                name=user_session['user_name'],
                                email=user_session['user_email'],
                                authenticated=user_session['authenticated'])
+
     return render_template('index.html')
 
 
@@ -47,7 +48,7 @@ def save():
 
     if acc == "farmer":
         # Add the farmer to the 'farmers' table
-        add_farmer(session, u_id, name, email, phone,
+        Farmer.add_farmer(session, u_id, name, email, phone,
                    location, password)
         return redirect(url_for('index'))
     elif acc == "consumer":
@@ -102,10 +103,20 @@ def logout():
 def dashboard():
     # Check if the user is logged in
     if 'user_id' in user_session:
-        return render_template('dashboard.html',
-                               name=user_session['user_name'],
-                               email=user_session['user_email'],
-                               authenticated=user_session['authenticated'])
+        # Get the authenticated farmer
+        authenticated_farmer = (db_storage.get_session().query(Farmer)
+                                .filter_by(id=user_session['user_id']).first())
+        if authenticated_farmer:
+            # Get the products added by the farmer
+            products = authenticated_farmer.get_products(db_storage.get_session())
+            return render_template('dashboard.html',
+                                   name=user_session['user_name'],
+                                   email=user_session['user_email'],
+                                   authenticated=user_session['authenticated'],
+                                   products=products)
+        else:
+            flash('Authenticated farmer not found', 'error')
+            return redirect(url_for('login'))
     else:
         return redirect(url_for('login'))
 

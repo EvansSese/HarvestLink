@@ -1,6 +1,6 @@
 <!-- dashboard.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -113,6 +113,25 @@
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+          {% for product in products %}
+          <div class="col">
+            <div class="p-3">
+              <div class="card">
+                  <img src="{{ url_for('static', filename='images/Logo.png') }}" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">Fresh {{product.name }} in {{ product.location }} at {{ product.price }} per kg</p>
+                    <a href="#" class="card-link btn btn-success">Update</a>
+                    <a href="/delete_product/{{product.id}}" class="card-link btn btn-default">Delete</a>
+                  </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
       </div>
     </div>
 </body>
