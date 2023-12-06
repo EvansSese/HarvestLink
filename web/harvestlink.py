@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import session as user_session
@@ -7,6 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from models.farmers import add_farmer, Farmer
 from models.consumers import add_consumer, Consumer
 from models.engine.storage import DatabaseStorage
+from models.products import add_product, Product
 
 app = Flask(__name__)
 app.secret_key = 'hl_user_session'
@@ -45,13 +47,13 @@ def save():
 
     if acc == "farmer":
         # Add the farmer to the 'farmers' table
-        add_farmer(session, u_id=u_id, name=name, email=email, phone=phone,
-                   location=location, password=password)
+        add_farmer(session, u_id, name, email, phone,
+                   location, password)
         return redirect(url_for('index'))
     elif acc == "consumer":
         # Add the consumer to the 'consumers' table
-        add_consumer(session, u_id=u_id, name=name, email=email, phone=phone,
-                     location=location, password=password)
+        add_consumer(session, u_id, name, email, phone,
+                     location, password)
         return redirect(url_for('index'))
     else:
         return redirect(url_for('index'))
@@ -106,6 +108,26 @@ def dashboard():
                                authenticated=user_session['authenticated'])
     else:
         return redirect(url_for('login'))
+
+
+@app.route('/add_product', methods=['POST'])
+def add_new_product():
+    u_id = str(uuid.uuid4())
+    name = request.form['name']
+    category = request.form['category']
+    price = request.form['price']
+    location = request.form['location']
+    quantity = request.form['quantity']
+    farmer_id = user_session['user_id']
+    created_at = datetime.now()
+    updated_at = datetime.now()
+
+    # Create a session to interact with the database
+    session = db_storage.get_session()
+
+    add_product(session, u_id, name, category, price,
+                location, quantity, farmer_id, created_at, updated_at)
+    return redirect(url_for('dashboard'))
 
 
 def authenticate_farmer(email, password):

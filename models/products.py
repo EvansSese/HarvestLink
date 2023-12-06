@@ -2,14 +2,14 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
-from farmers import Base
+from models.farmers import Base
 from models.engine.storage import DatabaseStorage
 
 
 class Product(Base):
     __tablename__ = 'products'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(String(60), primary_key=True)
     name = Column(String(128), nullable=False)
     category = Column(String(128))
     price = Column(Float, nullable=False)
@@ -20,11 +20,22 @@ class Product(Base):
     updated_at = Column(DateTime, default=datetime.now())
 
     # Define the relationship with the Farmer model
-    farmer = relationship('Farmer', back_populates='products')
+    farmer = relationship('Farmer', backref='products')
 
     def __repr__(self):
         return (f"<Product(id={self.id}, name={self.name}, price={self.price}, "
                 f"quantity={self.quantity}, farmer_id={self.farmer_id})>")
+
+
+def add_product(session, u_id, name, category, price, location, quantity,
+                farmer_id, created_at, updated_at):
+    """Add a new farmer to the 'farmers' table."""
+    new_product = Product(id=u_id, name=name, category=category, price=price,
+                          location=location, quantity=quantity,
+                          farmer_id=farmer_id,created_at=created_at,
+                          updated_at=updated_at)
+    session.add(new_product)
+    session.commit()
 
 
 if __name__ == "__main__":
