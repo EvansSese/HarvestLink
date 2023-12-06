@@ -39,6 +39,36 @@ class Product(Base):
         session.commit()
 
     @classmethod
+    def update_product(cls, session: Session, product_id, farmer_id,
+                       new_data: dict) -> bool:
+        """
+        Update a product with the given ID belonging to the specified farmer.
+        Returns True if the update is successful, False otherwise.
+        """
+        try:
+            product_to_update = (
+                session.query(cls)
+                .filter_by(id=product_id, farmer_id=farmer_id)
+                .first()
+            )
+
+            if product_to_update:
+                # Update product attributes with new data
+                for key, value in new_data.items():
+                    setattr(product_to_update, key, value)
+
+                # Update the 'updated_at' timestamp
+                product_to_update.updated_at = datetime.now()
+
+                session.commit()
+                return True
+
+        except SQLAlchemyError as e:
+            print(f"Error updating product: {e}")
+
+        return False
+
+    @classmethod
     def delete_product(cls, session: Session, product_id, farmer_id) -> bool:
         """
         Delete a product with the given ID belonging to the specified farmer.

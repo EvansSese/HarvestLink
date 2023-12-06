@@ -151,6 +151,63 @@ def add_new_product():
     return redirect(url_for('dashboard'))
 
 
+@app.route('/update_product/<product_id>', methods=['GET', 'POST'])
+def update_product(product_id):
+    try:
+        # Check if the user is logged in
+        if 'user_id' not in user_session:
+            flash('You need to be logged in to update a product', 'error')
+            return redirect(url_for('login'))
+
+        # Get the authenticated farmer
+        authenticated_farmer = db_storage.get_session().query(Farmer).filter_by(id=user_session['user_id']).first()
+
+        # Check if the authenticated farmer exists
+        if not authenticated_farmer:
+            flash('Authenticated farmer not found', 'error')
+            return redirect(url_for('login'))
+
+        # Get the product to update
+        product_to_update = (
+            db_storage.get_session()
+            .query(Product)
+            .filter_by(id=product_id, farmer_id=authenticated_farmer.id)
+            .first()
+        )
+
+        # Check if the product belongs to the authenticated farmer
+        if not product_to_update:
+            flash('Product not found or does not belong to the authenticated '
+                  'farmer', 'error')
+            return redirect(url_for('dashboard'))
+
+        # Handle form submission for updating the product
+        if request.method == 'POST':
+            new_data = {
+                'name': request.form['name'],
+                'category': request.form['category'],
+                'price': float(request.form['price']),
+                'location': request.form['location'],
+                'quantity': int(request.form['quantity']),
+            }
+
+            # Attempt to update the product
+            if Product.update_product(db_storage.get_session(), product_id,
+                                      authenticated_farmer.id, new_data):
+                flash('Product updated successfully', 'success')
+            else:
+                flash('Error updating product', 'error')
+
+            return redirect(url_for('dashboard'))
+
+        return redirect(url_for('dashboard'))
+
+    except SQLAlchemyError as e:
+        flash(f"Error updating product: {e}", 'error')
+
+    return redirect(url_for('dashboard'))
+
+
 @app.route('/delete_product/<product_id>', methods=['POST', 'GET'])
 def delete_product(product_id):
     try:
