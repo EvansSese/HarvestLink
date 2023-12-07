@@ -1,11 +1,9 @@
 import uuid
 from datetime import datetime
-
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import session as user_session
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-
 from models.cart import Cart
 from models.farmers import Farmer
 from models.consumers import add_consumer, Consumer
@@ -131,6 +129,49 @@ def dashboard():
             return redirect(url_for('login'))
     else:
         return redirect(url_for('login'))
+
+
+@app.route('/view_cart')
+def view_cart():
+    try:
+        # Check if the user is logged in
+        if 'user_id' not in user_session:
+            flash('You need to be logged in to view your cart', 'error')
+            return redirect(url_for('login'))
+
+        # Get the authenticated consumer
+        authenticated_consumer = (db_storage.get_session().query(Consumer)
+                                  .filter_by(id=user_session['user_id'])
+                                  .first())
+
+        # Check if the authenticated consumer exists
+        if not authenticated_consumer:
+            flash('Authenticated consumer not found', 'error')
+            return redirect(url_for('login'))
+
+        # Get the cart items for the authenticated consumer
+        cart_items = (
+            db_storage.get_session()
+            .query(Cart, Product)
+            .join(Product, Cart.product_id == Product.id)
+            .filter(Cart.consumer_id == authenticated_consumer.id)
+            .all()
+        )
+        total_cost = sum(
+            cart_item.quantity * product.price for cart_item, product in
+            cart_items)
+
+        return render_template('cart.html',
+                               name=user_session['user_name'],
+                               email=user_session['user_email'],
+                               authenticated=user_session['authenticated'],
+                               cart_items=cart_items,
+                               total_cost=total_cost)
+
+    except SQLAlchemyError as e:
+        flash(f"Error viewing cart: {e}", 'error')
+
+    return redirect(url_for('index'))
 
 
 @app.route('/add_product', methods=['POST'])
