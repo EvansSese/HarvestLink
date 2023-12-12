@@ -74,6 +74,7 @@
                 <th scope="col">Quantity (kgs)</th>
                 <th scope="col">Price (Kshs)</th>
                 <th scope="col">Total (Kshs)</th>
+                <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -83,6 +84,39 @@
                     <td>{{ cart_item.quantity }}</td>
                     <td>{{ product.price }}</td>
                     <td>{{ product.price * cart_item.quantity }}</td>
+                    <td>
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#{{cart_item.id}}">
+                          Edit
+                        </button>
+                        <a class="btn btn-outline-danger" href="{{ url_for('delete_item', item_id=cart_item.id) }}" onclick="return confirm('Are you sure you want to delete {{ product.name }} from your cart?')">Delete</a>
+                    </td>
+                    <form action="/view_cart" method="post">
+                        <div class="modal fade" id="{{cart_item.id}}" tabindex="-1" aria-labelledby="updateQuantityLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="updateProductLabel">Edit Quantity</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <form action="/view_cart" method="post">
+                                    <div class="mb-3">
+                                        <label for="quantity" class="form-label">Quantity:</label>
+                                        <input type="number" id="quantity" name="new_quantity" class="form-control" value="{{ cart_item.quantity }}" required>
+                                        <input type="hidden" id="product_id" name="product_id" value="{{ product.id }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <button type="submit" class="btn btn-primary">Edit Quantity</button>
+                                    </div>
+                                </form>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </form>
                 </tr>
             {% endfor %}
             <tr>
@@ -90,6 +124,7 @@
                     <td></td>
                     <th scope="row">Grand Total</th>
                     <td>{{ total_cost }}</td>
+                    <td></td>
                 </tr>
         </tbody>
     </table>

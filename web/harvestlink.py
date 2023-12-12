@@ -131,7 +131,7 @@ def dashboard():
         return redirect(url_for('login'))
 
 
-@app.route('/view_cart')
+@app.route('/view_cart', methods=['GET', 'POST'])
 def view_cart():
     try:
         # Check if the user is logged in
@@ -140,14 +140,27 @@ def view_cart():
             return redirect(url_for('login'))
 
         # Get the authenticated consumer
-        authenticated_consumer = (db_storage.get_session().query(Consumer)
-                                  .filter_by(id=user_session['user_id'])
-                                  .first())
+        authenticated_consumer = (db_storage.get_session().query(Consumer).
+                                  filter_by(id=user_session['user_id']).first())
 
         # Check if the authenticated consumer exists
         if not authenticated_consumer:
             flash('Authenticated consumer not found', 'error')
             return redirect(url_for('login'))
+
+        # Handle form submissions for editing quantities
+        if request.method == 'POST':
+            product_id = request.form['product_id']
+            new_quantity = int(request.form['new_quantity'])
+
+            # Use the edit_quantity method from the Cart class
+            if Cart.edit_quantity(db_storage.get_session(), product_id,
+                                  authenticated_consumer.id, new_quantity):
+                flash('Quantity updated successfully', 'success')
+            else:
+                flash('Error updating quantity', 'error')
+
+            return redirect(url_for('view_cart'))
 
         # Get the cart items for the authenticated consumer
         cart_items = (
@@ -157,21 +170,52 @@ def view_cart():
             .filter(Cart.consumer_id == authenticated_consumer.id)
             .all()
         )
-        total_cost = sum(
-            cart_item.quantity * product.price for cart_item, product in
-            cart_items)
+
+        # Calculate the total quantity and total cost of items in the cart
+        total_quantity = sum(cart_item.quantity for cart_item, _ in cart_items)
+        total_cost = sum(cart_item.quantity * product.price for cart_item, product in cart_items)
 
         return render_template('cart.html',
-                               name=user_session['user_name'],
-                               email=user_session['user_email'],
-                               authenticated=user_session['authenticated'],
                                cart_items=cart_items,
+                               total_quantity=total_quantity,
                                total_cost=total_cost)
 
     except SQLAlchemyError as e:
         flash(f"Error viewing cart: {e}", 'error')
 
     return redirect(url_for('index'))
+
+
+@app.route('/delete_item/<item_id>')
+def delete_item(item_id):
+    try:
+        # Check if the user is logged in
+        if 'user_id' not in user_session:
+            flash('You need to be logged in to delete items from your cart', 'error')
+            return redirect(url_for('login'))
+
+        # Get the authenticated consumer
+        authenticated_consumer = (db_storage.get_session().query(Consumer).
+                                  filter_by(id=user_session['user_id']).first())
+
+        # Check if the authenticated consumer exists
+        if not authenticated_consumer:
+            flash('Authenticated consumer not found', 'error')
+            return redirect(url_for('login'))
+
+        # Use the delete_item method from the Cart class
+        if Cart.delete_item(db_storage.get_session(), item_id,
+                            authenticated_consumer.id):
+            flash('Item deleted successfully', 'success')
+        else:
+            flash('Error deleting item', 'error')
+
+        return redirect(url_for('view_cart'))
+
+    except SQLAlchemyError as e:
+        flash(f"Error deleting item: {e}", 'error')
+
+    return redirect(url_for('view_products'))
 
 
 @app.route('/add_product', methods=['POST'])

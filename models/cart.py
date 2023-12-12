@@ -63,6 +63,45 @@ class Cart(Base):
 
         return False
 
+    @classmethod
+    def edit_quantity(cls, session: Session, product_id, consumer_id,
+                      new_quantity: int) -> bool:
+        try:
+            cart_item = (
+                session.query(cls)
+                .filter_by(product_id=product_id, consumer_id=consumer_id)
+                .first()
+            )
+
+            if cart_item:
+                cart_item.quantity = new_quantity
+                session.commit()
+                return True
+
+        except SQLAlchemyError as e:
+            print(f"Error editing quantity in the cart: {e}")
+
+        return False
+
+    @classmethod
+    def delete_item(cls, session: Session, id, consumer_id) -> bool:
+        try:
+            cart_item = (
+                session.query(cls)
+                .filter_by(id=id, consumer_id=consumer_id)
+                .first()
+            )
+
+            if cart_item:
+                session.delete(cart_item)
+                session.commit()
+                return True
+
+        except SQLAlchemyError as e:
+            print(f"Error deleting item from the cart: {e}")
+
+        return False
+
 
 if __name__ == "__main__":
     # Initialize the DatabaseStorage
