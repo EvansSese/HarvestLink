@@ -9,6 +9,7 @@ from models.farmers import Farmer
 from models.consumers import add_consumer, Consumer
 from models.engine.storage import DatabaseStorage
 from models.products import Product
+from models.orders import Order
 
 app = Flask(__name__)
 app.secret_key = 'hl_user_session'
@@ -376,6 +377,39 @@ def add_item_to_cart():
 
     return redirect(url_for('index'))
 
+
+@app.route('/place_order', methods=['POST'])
+def place_order():
+    try:
+        # Check if the user is logged in
+        if 'user_id' not in user_session:
+            flash('You need to be logged in to place an order', 'error')
+            return redirect(url_for('login'))
+
+        # Get the authenticated consumer
+        authenticated_consumer = (db_storage.get_session().query(Consumer).
+                                  filter_by(id=user_session['user_id']).first())
+
+        # Check if the authenticated consumer exists
+        if not authenticated_consumer:
+            flash('Authenticated consumer not found', 'error')
+            return redirect(url_for('login'))
+
+        # Use the place_order method from the Order class
+        id = str(uuid.uuid4())
+        if Order.place_order(db_storage.get_session(), id,
+                             authenticated_consumer.id,
+                             authenticated_consumer.location):
+            flash('Order placed successfully', 'success')
+        else:
+            flash('Error placing order', 'error')
+
+        return redirect(url_for('index'))
+
+    except SQLAlchemyError as e:
+        flash(f"Error placing order: {e}", 'error')
+
+    return redirect(url_for('index'))
 
 def authenticate_farmer(email, password):
     # Create a session to interact with the database

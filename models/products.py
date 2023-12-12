@@ -23,7 +23,8 @@ class Product(Base):
     farmer = relationship('Farmer', backref='products')
 
     def __repr__(self):
-        return (f"<Product(id={self.id}, name={self.name}, price={self.price}, "
+        return (f"<Product(id={self.id}, name={self.name}, "
+                f"category={self.category}, price={self.price},"
                 f"quantity={self.quantity}, farmer_id={self.farmer_id})>")
 
     def add_product(session, u_id, name, category, price, location, quantity,

@@ -25,6 +25,9 @@ class Cart(Base):
     product = relationship('Product', backref='cart')
     consumer = relationship('Consumer', backref='cart')
 
+    def __repr__(self):
+        return f"<Cart(id={self.id}, product_id={self.product_id}, quantity={self.quantity}, consumer_id={self.consumer_id})>"
+
     @classmethod
     def add_item(cls, session: Session, u_id, product_id, consumer_id,
                  quantity: int, created_at, updated_at) -> bool:

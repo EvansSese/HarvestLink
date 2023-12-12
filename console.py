@@ -32,6 +32,11 @@ class HarvestLinkConsole(cmd.Cmd):
         """Run cart.py to create the 'cart' table."""
         subprocess.run(["python", "models/cart.py"])
 
+
+    def do_create_orders_table(self, arg):
+        """Run cart.py to create the 'cart' table."""
+        subprocess.run(["python", "models/orders.py"])
+
     def do_exit(self, arg):
         """Exit the program."""
         print("Exiting.")
