@@ -137,6 +137,46 @@ class Order(Base):
             session.rollback()
             raise ValueError(f"Error accepting order: {e}")
 
+    @classmethod
+    def decline_order(cls, session: Session, order_id, farmer_id):
+        try:
+            # Get the order by ID
+            order = session.query(cls).get(order_id)
+
+            # Check if the order exists and belongs to the provided farmer
+            if order and order.farmer_id == farmer_id:
+                # Change the status of the order to "Declined"
+                order.status = 'Declined'
+                session.commit()
+                return True
+            else:
+                raise ValueError(
+                    "Order not found or does not belong to the provided farmer")
+
+        except SQLAlchemyError as e:
+            session.rollback()
+            raise ValueError(f"Error declining order: {e}")
+
+    @classmethod
+    def deliver_order(cls, session: Session, order_id, farmer_id):
+        try:
+            # Get the order by ID
+            order = session.query(cls).get(order_id)
+
+            # Check if the order exists and belongs to the provided farmer
+            if order and order.farmer_id == farmer_id:
+                # Change the status of the order to "Declined"
+                order.status = 'Delivered'
+                session.commit()
+                return True
+            else:
+                raise ValueError(
+                    "Order not found or does not belong to the provided farmer")
+
+        except SQLAlchemyError as e:
+            session.rollback()
+            raise ValueError(f"Error delivering order: {e}")
+
 
 if __name__ == "__main__":
     # Initialize the DatabaseStorage

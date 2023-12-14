@@ -490,6 +490,54 @@ def accept_order(order_id):
     return redirect(url_for('farmer_orders'))
 
 
+@app.route('/decline_order/<order_id>')
+def decline_order(order_id):
+    try:
+        # Check if the user is logged in as a farmer
+        if 'user_id' in user_session:
+            # Get the authenticated farmer
+            authenticated_farmer = (db_storage.get_session().query(Farmer)
+                                    .filter_by(id=user_session['user_id'])
+                                    .first())
+
+            if authenticated_farmer:
+                # Call the decline_order method in the Order class
+                Order.decline_order(db_storage.get_session(), order_id,
+                                    authenticated_farmer.id)
+                flash(f"Order {order_id} has been declined", 'success')
+        else:
+            return redirect(url_for('login'))
+
+    except ValueError as e:
+        flash(f"Error declining order: {e}", 'error')
+
+    return redirect(url_for('farmer_orders'))
+
+
+@app.route('/deliver_order/<order_id>')
+def deliver_order(order_id):
+    try:
+        # Check if the user is logged in as a farmer
+        if 'user_id' in user_session:
+            # Get the authenticated farmer
+            authenticated_farmer = (db_storage.get_session().query(Farmer)
+                                    .filter_by(id=user_session['user_id'])
+                                    .first())
+
+            if authenticated_farmer:
+                # Call the decline_order method in the Order class
+                Order.deliver_order(db_storage.get_session(), order_id,
+                                    authenticated_farmer.id)
+                flash(f"Order {order_id} has been delivered", 'success')
+        else:
+            return redirect(url_for('login'))
+
+    except ValueError as e:
+        flash(f"Error delivering order: {e}", 'error')
+
+    return redirect(url_for('farmer_orders'))
+
+
 def authenticate_farmer(email, password):
     # Create a session to interact with the database
     session = db_storage.get_session()

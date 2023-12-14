@@ -86,25 +86,21 @@
                     <td>{{ my_order.price }}</td>
                     <td>{{ my_order.price * my_order.quantity }}</td>
                     <td>
-                        {% if my_order.status == "Pending" %}
+                        {% if my_order.status == 'Pending' %}
                             <span class="badge rounded-pill bg-warning text-dark">{{ my_order.status }}</span>
-                        {% elif my_orders.status == "Accepted" %}
+                        {% elif my_order.status == 'Accepted' %}
                             <span class="badge rounded-pill bg-info text-dark">{{ my_order.status }}</span>
-                        {% elif my_orders.status == "Delivered" %}
-                            <span class="badge rounded-pill bg-success text-dark">{{ my_order.status }}</span>
+                        {% elif my_order.status == 'Delivered' %}
+                            <span class="badge rounded-pill bg-success text-light">{{ my_order.status }}</span>
                         {% else %}
-                            <span class="badge rounded-pill bg-danger text-dark">{{ my_order.status }}</span>
+                            <span class="badge rounded-pill bg-danger text-light">{{ my_order.status }}</span>
                         {% endif %}
                     </td>
                     <td>
-                        {% if my_order.status == "Pending" %}
+                        {% if my_order.status == 'Pending' %}
                             <a class="btn btn-outline-danger btn-sm" href="" onclick="return confirm('Are you sure you want to cancel {{ my_order.product_name }} from your orders?')">Cancel</a>
-                        {% elif my_order.status == "Accepted" %}
-                            <p>No action needed</p>
-                        {% elif my_order.status == "Delivered" %}
-                            <span class="badge rounded-pill bg-success text-dark">{{ my_order.status }}</span>
                         {% else %}
-                            <span class="badge rounded-pill bg-danger text-dark">{{ my_order.status }}</span>
+                            <p>No action needed</p>
                         {% endif %}
                     </td>
                 </tr>
