@@ -53,7 +53,7 @@
 <h2>Acknowledgements</h2>
 <p>Special thanks to our mentors and contributors for their invaluable insights and support during the development of HarvestLink.</p>
 <h2>License</h2>
-<p>This project is licensed under the MIT License - see the [LICENSE]<a href="/HarvestLink/LICENSE.txt/file"> file for details.
+<p>This project is licensed under the MIT License - see the [LICENSE]<a href="/LICENSE.txt"> file for details.
 </p>
 </body>
 </html>
