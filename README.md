@@ -10,10 +10,8 @@
 <p>HarvestLink is an innovative platform connecting farmers to markets, streamlining the agricultural supply chain. It aims to revolutionize the agricultural industry by providing a digital platform that facilitates seamless interaction between farmers and markets. The platform offers features for inventory management, market analysis, and real-time connectivity to optimize the agricultural supply chain.
 </p>
 <p>HarvestLink is meant to connect the farmer and consumer at the table. This is by directly providing an online market where the consumer purchases the farm produce directly from the farm without any intermediaries</p>
-<ul><strong>Project landing page:</strong> https://evanssese166.wixsite.com/harvestlink
-</ul>
-<ul><strong>Deployed Site:</strong> http://41.215.44.98:8080/
-</ul>
+<ul><strong>Project landing page:</strong>https://evanssese166.wixsite.com/harvestlink</ul>
+<ul><strong>Deployed Site:</strong>http://41.215.44.98:8080/</ul>
 <ul><strong>Author's LinkedIn:</strong><li>Grace Kamondo https://www.linkedin.com/in/grace-kamondo-/?=</li>
 <li>Evans Sese https://www.linkedin.com/in/evans-sese/</li></ul>
 <h2>Features</h2>
@@ -54,9 +52,9 @@
 <li>Create a pull request.</li>
 </ol>
 <h2>Acknowledgements</h2>
-<p>Special thanks to our mentors and contributors for their invaluable insights and support during the development of Harvestlink.</p>
+<p>Special thanks to our mentors and contributors for their invaluable insights and support during the development of HarvestLink.</p>
 <h2>License</h2>
-<p>This project is licensed under the MIT License - see the [LICENSE](path/HarvestLink/license/file) file for details.
+<p>This project is licensed under the MIT License - see the [LICENSE]<link href="(path/HarvestLink/LICENSE.txt/file)"> file for details.
 </p>
 </body>
 </html>
