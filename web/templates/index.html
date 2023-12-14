@@ -85,11 +85,12 @@
                       <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1" required><br>
                     <button type="submit" class="card-link btn btn-success" onclick="return confirm('{{ product.name }} will be put in your cart. Proceed?')">Add to Cart</button>
                   </div>
+                  {% endfor %}
               </div>
             </div>
           </div>
           </form>
-          {% endfor %}
+
       </div>
     </div>
     <!-- Bootstrap scripts (from CDN) -->
