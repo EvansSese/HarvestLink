@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask import session as user_session
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from models.cart import Cart
 from models.farmers import Farmer
 from models.consumers import add_consumer, Consumer
@@ -174,7 +174,9 @@ def view_cart():
 
         # Calculate the total quantity and total cost of items in the cart
         total_quantity = sum(cart_item.quantity for cart_item, _ in cart_items)
-        total_cost = sum(cart_item.quantity * product.price for cart_item, product in cart_items)
+        total_cost = sum(
+            cart_item.quantity * product.price for cart_item, product in
+            cart_items)
 
         return render_template('cart.html',
                                cart_items=cart_items,
@@ -192,7 +194,8 @@ def delete_item(item_id):
     try:
         # Check if the user is logged in
         if 'user_id' not in user_session:
-            flash('You need to be logged in to delete items from your cart', 'error')
+            flash('You need to be logged in to delete items from your cart',
+                  'error')
             return redirect(url_for('login'))
 
         # Get the authenticated consumer
@@ -248,7 +251,8 @@ def update_product(product_id):
             return redirect(url_for('login'))
 
         # Get the authenticated farmer
-        authenticated_farmer = db_storage.get_session().query(Farmer).filter_by(id=user_session['user_id']).first()
+        authenticated_farmer = db_storage.get_session().query(Farmer).filter_by(
+            id=user_session['user_id']).first()
 
         # Check if the authenticated farmer exists
         if not authenticated_farmer:
@@ -410,6 +414,55 @@ def place_order():
         flash(f"Error placing order: {e}", 'error')
 
     return redirect(url_for('index'))
+
+
+@app.route('/orders')
+def orders():
+    try:
+        # Check if the user is logged in
+        if 'user_id' not in user_session:
+            flash('You need to be logged in to view orders', 'error')
+            return redirect(url_for('login'))
+
+        # Get the authenticated consumer's orders
+        my_orders = Order.view_orders(db_storage.get_session(),
+                                      user_session['user_id'])
+        print(my_orders)
+        return render_template('orders.html', my_orders=my_orders)
+
+    except Exception as e:
+        flash(f"Error fetching orders: {e}", 'error')
+        print(e)
+        return []
+
+
+@app.route('/dashboard/orders')
+def farmer_orders():
+    try:
+        # Check if the farmer is logged in
+        if 'user_id' in user_session:
+            # Get the authenticated farmer
+            authenticated_farmer = (db_storage.get_session().query(Farmer)
+                                    .filter_by(id=user_session['user_id'])
+                                    .first())
+
+            if authenticated_farmer:
+                # Get the authenticated farmer's orders
+                my_orders = Order.get_orders(db_storage.get_session(),
+                                             authenticated_farmer.id)
+
+                return render_template('process_orders.html',
+                                       name=user_session['user_name'],
+                                       email=user_session['user_email'],
+                                       authenticated=user_session['authenticated'],
+                                       my_orders=my_orders)
+
+    except Exception as e:
+        flash(f"Error fetching orders: {e}", 'error')
+        print(e)
+
+    return redirect(url_for('dashboard'))
+
 
 def authenticate_farmer(email, password):
     # Create a session to interact with the database

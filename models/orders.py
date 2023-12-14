@@ -4,7 +4,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from models import Base
 from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from sqlalchemy.orm import relationship, Session, aliased
+from sqlalchemy.orm import relationship, Session, aliased, joinedload
 from models.engine.storage import DatabaseStorage
 from models.products import Product
 from models.consumers import Consumer
@@ -35,7 +35,7 @@ class Order(Base):
     farmer = relationship('Farmer', backref='orders')
 
     def __repr__(self):
-        return f"<Order(id={self.id}, cart_id={self.cart_id}, product_id={self.product_id}, " \
+        return f"<Order(id={self.id}, checkout_id={self.checkout_id}, product_id={self.product_id}, " \
                f"consumer_id={self.consumer_id}, farmer_id={self.farmer_id}, " \
                f"product_name={self.product_name}, quantity={self.quantity}, " \
                f"price={self.price}, category={self.category}, location={self.location}, status={self.status})>"
@@ -82,6 +82,40 @@ class Order(Base):
             print(f"Error placing order: {e}")
             session.rollback()
             return False
+
+    @classmethod
+    def view_orders(cls, session: Session, consumer_id: int):
+        try:
+            # Get the authenticated consumer's orders with product and farmer information
+            orders = (
+                session.query(cls)
+                .filter_by(consumer_id=consumer_id)
+                .options(joinedload(cls.product), joinedload(cls.farmer))
+                .all()
+            )
+
+            return orders
+
+        except SQLAlchemyError as e:
+            print(f"Error fetching orders: {e}")
+            print(e)
+            return []
+
+    @classmethod
+    def get_orders(cls, session: Session, farmer_id):
+        try:
+            # Get orders associated with the logged-in farmer
+            orders = (
+                session.query(cls)
+                .filter_by(farmer_id=farmer_id)
+                .all()
+            )
+            print(orders)
+            return orders
+
+        except SQLAlchemyError as e:
+            print(f"Error fetching orders: {e}")
+            return []
 
 
 if __name__ == "__main__":
