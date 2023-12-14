@@ -464,6 +464,32 @@ def farmer_orders():
     return redirect(url_for('dashboard'))
 
 
+@app.route('/accept_order/<order_id>')
+def accept_order(order_id):
+    try:
+        # Check if the user is logged in as a farmer
+        if 'user_id' in user_session:
+            # Get the authenticated farmer
+            authenticated_farmer = (db_storage.get_session().query(Farmer)
+                                    .filter_by(id=user_session['user_id'])
+                                    .first())
+
+            if authenticated_farmer:
+                # Call the accept_order method in the Order class
+                Order.accept_order(db_storage.get_session(), order_id,
+                                   authenticated_farmer.id)
+                flash(f"Order {order_id} has been accepted", 'success')
+        else:
+            return redirect(url_for('login'))
+
+    except ValueError as e:
+        flash(f"Error accepting order: {e}", 'error')
+        print(e)
+        return redirect(url_for('login'))
+
+    return redirect(url_for('farmer_orders'))
+
+
 def authenticate_farmer(email, password):
     # Create a session to interact with the database
     session = db_storage.get_session()

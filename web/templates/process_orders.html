@@ -32,32 +32,34 @@
             </li>
           </ul>
           <form class="d-flex">
-              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               {% if authenticated %}
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       {{ name }}
                   </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown2">
                     <li><a class="dropdown-item" href="/dashboard">Profile</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="/logout">Logout</a></li>
                   </ul>
                 </li>
+              </ul>
               {% else %}
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Profile
                   </a>
-                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown3">
                     <li><a class="dropdown-item" href="/register">Register</a></li>
                     <li><a class="dropdown-item" href="/login">Login</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="#">Terms & Conditions</a></li>
                   </ul>
                 </li>
+              </ul>
               {% endif %}
-            </ul>
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
@@ -88,17 +90,20 @@
                     <td>
                         {% if my_order.status == "Pending" %}
                             <span class="badge rounded-pill bg-warning text-dark">{{ my_order.status }}</span>
-                        {% elif my_orders.status == "Accepted" %}
-                            <span class="badge rounded-pill bg-info text-dark">{{ my_order.status }}</span>
-                        {% elif my_orders.status == "Delivered" %}
+                        {% endif %}
+                        {% if my_orders.status == 'Accepted' %}
+                            <span class="badge rounded-pill bg-info text-dark">{{ my_order.status }}Accepted</span>
+                        {% endif %}
+                        {% if my_orders.status == "Delivered" %}
                             <span class="badge rounded-pill bg-success text-dark">{{ my_order.status }}</span>
                         {% else %}
-                            <span class="badge rounded-pill bg-danger text-dark">{{ my_order.status }}</span>
+                            <span class="badge rounded-pill bg-success text-light">{{ my_order.status }}</span>
                         {% endif %}
                     </td>
                     <td>
                         {% if my_order.status == "Pending" %}
-                            <a class="btn btn-outline-danger btn-sm" href="" onclick="return confirm('Are you sure you want to cancel {{ my_order.product_name }} from your orders?')">Cancel</a>
+                            <a class="btn btn-outline-success btn-sm" href="/accept_order/{{ my_order.id }}" onclick="return confirm('Are you sure you want to accept {{ my_order.product_name }} from your orders?')">Accept</a>
+                            <a class="btn btn-outline-danger btn-sm" href="" onclick="return confirm('Are you sure you want to cancel {{ my_order.product_name }} from your orders?')">Reject</a>
                         {% elif my_order.status == "Accepted" %}
                             <p>No action needed</p>
                         {% elif my_order.status == "Delivered" %}
