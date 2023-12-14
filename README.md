@@ -7,7 +7,7 @@
 <h1>HarvestLink</h1>
 <h5>“The bridge between the farmer’s produce and consumer’s table”</h5>
 <h2>Overview</h2>
-<p>HarvestLink is an innovative platform connecting farmers to markets, streamlining the agricultural supply chain. It aims to revolutionize the agricultural industry by providing a digital platform that facilitates seamless interaction between farmers and markets. The platform offers features for inventory management, market analysis, and real-time connectivity to optimize the agricultural supply chain.
+<p>HarvestLink is an innovative web application designed to connect farmers and consumers to markets without loopholes to jump, streamlining the agricultural supply chain. It aims to revolutionize the agricultural industry by providing a digital platform that facilitates seamless interaction between farmers and markets. The platform offers features for inventory management, market analysis, and real-time connectivity to optimize the agricultural supply chain.
 </p>
 <p>HarvestLink is meant to connect the farmer and consumer at the table. This is by directly providing an online market where the consumer purchases the farm produce directly from the farm without any intermediaries</p>
 <ul><strong>Project landing page:</strong>https://evanssese166.wixsite.com/harvestlink</ul>
@@ -54,7 +54,7 @@
 <h2>Acknowledgements</h2>
 <p>Special thanks to our mentors and contributors for their invaluable insights and support during the development of HarvestLink.</p>
 <h2>License</h2>
-<p>This project is licensed under the MIT License - see the [LICENSE]<link href="(path/HarvestLink/LICENSE.txt/file)"> file for details.
+<p>This project is licensed under the MIT License - see the [LICENSE]<link href="(path/HarvestLink/LICENSE.txt/file)" rel="stylesheet"> file for details.
 </p>
 </body>
 </html>
