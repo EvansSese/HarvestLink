@@ -1,0 +1,32 @@
+APIs and Methods
+api/
+	GET: Displays the homepage with login/signup links
+api/signup
+	POST: Creates a user account (either farmer or consumer)
+api/login
+	POST: Logs in a user account (either farmer or consumer)
+api/update_profile
+	PUT: Updates/ Edits a user profile
+api/{farmer_id}/post_product
+	POST: Posts the farmer’s produce
+api/{farmer_id}/update_product
+	PUT: Updates the farmer’s produce i.e quantity, availability, location etc
+api/{farmer_id}/delete_product
+	DELETE: Deletes a farmer’s produce
+api/{farmer_id}/view_orders
+	GET: Lists the orders placed by consumers to the farmer
+api/{farmer_id}/process_order/{order_id}
+	PUT: Updates the status of the orders and the quantity of produce after sales
+api/{consumer_id}/update_profile
+	PUT: Updates the consumer’s profile
+api/{consumer_id}/make_order
+	POST: Posts an order to a farmer for a specific produce
+api/{consumer_id}/view_orders
+	GET: Lists the orders made by the consumer
+api/{consumer_id}/cancel_order
+	PUT: Cancels an order by the consumer
+api/{consumer_id}/market
+	GET: Lists all produce from farmers
+api/logout
+	DELETE: Destroys a user’s session
+
