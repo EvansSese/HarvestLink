@@ -178,7 +178,8 @@ def view_cart():
             else:
                 flash('Error updating quantity', 'error')
 
-            return redirect(url_for('view_cart'))
+            return redirect(url_for('view_cart',
+                                    consumer=authenticated_consumer))
 
         # Get the cart items for the authenticated consumer
         cart_items = (
@@ -198,7 +199,8 @@ def view_cart():
         return render_template('cart.html',
                                cart_items=cart_items,
                                total_quantity=total_quantity,
-                               total_cost=total_cost)
+                               total_cost=total_cost,
+                               consumer=authenticated_consumer)
 
     except SQLAlchemyError as e:
         flash(f"Error viewing cart: {e}", 'error')
@@ -441,11 +443,15 @@ def orders():
             flash('You need to be logged in to view orders', 'error')
             return redirect(url_for('login'))
 
+        authenticated_consumer = (db_storage.get_session().query(Consumer)
+                                  .filter_by(id=user_session['user_id'])
+                                  .first())
         # Get the authenticated consumer's orders
         my_orders = Order.view_orders(db_storage.get_session(),
                                       user_session['user_id'])
-        print(my_orders)
-        return render_template('orders.html', my_orders=my_orders)
+        return render_template('orders.html',
+                               my_orders=my_orders,
+                               consumer=authenticated_consumer)
 
     except Exception as e:
         flash(f"Error fetching orders: {e}", 'error')
