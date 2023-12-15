@@ -18,6 +18,11 @@ app.secret_key = 'hl_user_session'
 # Initialize the DatabaseStorage
 db_storage = DatabaseStorage()
 
+images_list = ['maize', 'oranges', 'pineapples', 'apples', 'capsicum',
+                   'onions', 'raspberries', 'tomatoes', 'rice', 'watermelon',
+                   'melons', 'wheat']
+# Create a regex pattern using the keywords
+pattern = re.compile('|'.join(images_list), re.IGNORECASE)
 
 @app.route('/')
 def index():
@@ -28,11 +33,6 @@ def index():
         .join(Farmer, Product.farmer_id == Farmer.id)
         .all()
     )
-    images_list = ['maize', 'oranges', 'pineapples', 'apples', 'capsicum',
-                   'onions', 'raspberries', 'tomatoes', 'rice', 'watermelon',
-                   'melons', 'wheat']
-    # Create a regex pattern using the keywords
-    pattern = re.compile('|'.join(images_list), re.IGNORECASE)
 
     for product, farmer in products:
         # Find the first match in the product name
@@ -137,6 +137,16 @@ def dashboard():
             # Get the products added by the farmer
             products = authenticated_farmer.get_products(
                 db_storage.get_session())
+
+            for product in products:
+                match = pattern.search(product.name)
+
+                if match:
+                    image = match.group()
+                    product.image = image
+                else:
+                    product.image = 'Logo'
+
             return render_template('dashboard.html',
                                    name=user_session['user_name'],
                                    email=user_session['user_email'],
@@ -178,7 +188,8 @@ def view_cart():
             else:
                 flash('Error updating quantity', 'error')
 
-            return redirect(url_for('view_cart'))
+            return redirect(url_for('view_cart',
+                                    consumer=authenticated_consumer))
 
         # Get the cart items for the authenticated consumer
         cart_items = (
@@ -198,7 +209,8 @@ def view_cart():
         return render_template('cart.html',
                                cart_items=cart_items,
                                total_quantity=total_quantity,
-                               total_cost=total_cost)
+                               total_cost=total_cost,
+                               consumer=authenticated_consumer)
 
     except SQLAlchemyError as e:
         flash(f"Error viewing cart: {e}", 'error')
@@ -441,11 +453,15 @@ def orders():
             flash('You need to be logged in to view orders', 'error')
             return redirect(url_for('login'))
 
+        authenticated_consumer = (db_storage.get_session().query(Consumer)
+                                  .filter_by(id=user_session['user_id'])
+                                  .first())
         # Get the authenticated consumer's orders
         my_orders = Order.view_orders(db_storage.get_session(),
                                       user_session['user_id'])
-        print(my_orders)
-        return render_template('orders.html', my_orders=my_orders)
+        return render_template('orders.html',
+                               my_orders=my_orders,
+                               consumer=authenticated_consumer)
 
     except Exception as e:
         flash(f"Error fetching orders: {e}", 'error')
@@ -544,7 +560,7 @@ def cancel_order(order_id):
 
             if authenticated_consumer:
                 # Call the decline_order method in the Order class
-                Order.decline_order(db_storage.get_session(), order_id,
+                Order.cancel_order(db_storage.get_session(), order_id,
                                     authenticated_consumer.id)
                 flash(f"Order {order_id} has been canceled", 'success')
         else:
