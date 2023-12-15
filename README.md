@@ -30,7 +30,7 @@
 <ul>
 <li>/api/farmers: Endpoint for farmer-related functionalities.</li>
 <li>/api/markets: Endpoint for market-related functionalities.</li>
-<li>Refer to the API documentation for detailed endpoint descriptions<a href="HarvestLink/APIs.txt"> API Documentation.</a></li>
+<li>Refer to the API documentation for detailed endpoint descriptions <a href="HarvestLink/APIs.txt"> API Documentation.</a></li>
 </ul>
 <h2>Technologies Used</h2>
 <ul>
@@ -53,7 +53,7 @@
 <h2>Acknowledgements</h2>
 <p>Special thanks to our mentors and contributors for their invaluable insights and support during the development of HarvestLink.</p>
 <h2>License</h2>
-<p>This project is licensed under the MIT License - for details see the <a href="HarvestLink/LICENSE.txt">LICENSE.
+<p>This project is licensed under the MIT License for details see [LICENSE]<a href="HarvestLink/LICENSE.txt"> file for details.
 </p>
 </body>
 </html>
