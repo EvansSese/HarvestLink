@@ -10,6 +10,7 @@ from models.consumers import add_consumer, Consumer
 from models.engine.storage import DatabaseStorage
 from models.products import Product
 from models.orders import Order
+import re
 
 app = Flask(__name__)
 app.secret_key = 'hl_user_session'
@@ -27,7 +28,22 @@ def index():
         .join(Farmer, Product.farmer_id == Farmer.id)
         .all()
     )
+    images_list = ['maize', 'oranges', 'pineapples','apples','capsicum',
+                   'onions', 'raspberries','tomatoes','rice','watermelon']
+    # Create a regex pattern using the keywords
+    pattern = re.compile('|'.join(images_list), re.IGNORECASE)
+
     if 'user_id' in user_session:
+        for product, farmer in products:
+            # Find the first match in the product name
+            match = pattern.search(product.name)
+
+            if match:
+                image = match.group()
+                product.image = image
+            else:
+                product.image = 'Logo'
+            print(product.image)
         return render_template('index.html',
                                name=user_session['user_name'],
                                email=user_session['user_email'],

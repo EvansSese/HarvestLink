@@ -75,10 +75,10 @@
           <div class="col">
             <div class="p-3">
               <div class="card">
-                  <img src="{{ url_for('static', filename='images/Logo.png') }}" class="card-img-top" alt="...">
+                  <img src="{{ url_for('static', filename='images/products/' + product.image + '.jpg') }}" class="card-img-top" alt="...">
                   <div class="card-body">
                     <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="card-text justify-content-left">Fresh {{product.name }} in {{ product.location }} at {{ product.price }} per kg</p>
+                    <p class="card-text justify-content-left">Fresh {{ product.name }} in {{ product.location }} at {{ product.price }} per kg</p>
                       <p class="card-text justify-content-left">Farmer: {{ farmer.name }}</p>
                       <input type="hidden" id="product_id" name="product_id" value="{{ product.id }}">
                       <input type="hidden" id="consumer_id" name="consumer_id" value="{{ id }}">
