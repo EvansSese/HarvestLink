@@ -28,28 +28,11 @@ def index():
         .join(Farmer, Product.farmer_id == Farmer.id)
         .all()
     )
-    images_list = ['maize', 'oranges', 'pineapples','apples','capsicum',
-                   'onions', 'raspberries','tomatoes','rice','watermelon']
+    images_list = ['maize', 'oranges', 'pineapples', 'apples', 'capsicum',
+                   'onions', 'raspberries', 'tomatoes', 'rice', 'watermelon',
+                   'melons', 'wheat']
     # Create a regex pattern using the keywords
     pattern = re.compile('|'.join(images_list), re.IGNORECASE)
-
-    if 'user_id' in user_session:
-        for product, farmer in products:
-            # Find the first match in the product name
-            match = pattern.search(product.name)
-
-            if match:
-                image = match.group()
-                product.image = image
-            else:
-                product.image = 'Logo'
-            print(product.image)
-        return render_template('index.html',
-                               name=user_session['user_name'],
-                               email=user_session['user_email'],
-                               id=user_session['user_id'],
-                               authenticated=user_session['authenticated'],
-                               products=products)
 
     for product, farmer in products:
         # Find the first match in the product name
@@ -60,7 +43,14 @@ def index():
             product.image = image
         else:
             product.image = 'Logo'
-        print(product.image)
+
+    if 'user_id' in user_session:
+        return render_template('index.html',
+                               name=user_session['user_name'],
+                               email=user_session['user_email'],
+                               id=user_session['user_id'],
+                               authenticated=user_session['authenticated'],
+                               products=products)
 
     return render_template('index.html', products=products)
 
@@ -629,4 +619,4 @@ def authenticate_consumer(email, password):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="192.168.16.11", port=5000, debug=True)
