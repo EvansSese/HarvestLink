@@ -18,6 +18,11 @@ app.secret_key = 'hl_user_session'
 # Initialize the DatabaseStorage
 db_storage = DatabaseStorage()
 
+images_list = ['maize', 'oranges', 'pineapples', 'apples', 'capsicum',
+                   'onions', 'raspberries', 'tomatoes', 'rice', 'watermelon',
+                   'melons', 'wheat']
+# Create a regex pattern using the keywords
+pattern = re.compile('|'.join(images_list), re.IGNORECASE)
 
 @app.route('/')
 def index():
@@ -28,11 +33,6 @@ def index():
         .join(Farmer, Product.farmer_id == Farmer.id)
         .all()
     )
-    images_list = ['maize', 'oranges', 'pineapples', 'apples', 'capsicum',
-                   'onions', 'raspberries', 'tomatoes', 'rice', 'watermelon',
-                   'melons', 'wheat']
-    # Create a regex pattern using the keywords
-    pattern = re.compile('|'.join(images_list), re.IGNORECASE)
 
     for product, farmer in products:
         # Find the first match in the product name
@@ -137,6 +137,16 @@ def dashboard():
             # Get the products added by the farmer
             products = authenticated_farmer.get_products(
                 db_storage.get_session())
+
+            for product in products:
+                match = pattern.search(product.name)
+
+                if match:
+                    image = match.group()
+                    product.image = image
+                else:
+                    product.image = 'Logo'
+
             return render_template('dashboard.html',
                                    name=user_session['user_name'],
                                    email=user_session['user_email'],
