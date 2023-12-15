@@ -16,10 +16,9 @@
 <li>Evans Sese https://www.linkedin.com/in/evans-sese/</li></ul>
 <h2>Features</h2>
 <ul>
-<li>Inventory Management: Track and manage agricultural produce, storage, and distribution.</li>
-<li>Marketplace: Facilitate buying and selling of produce between farmers and markets.</li>
-<li>Analytics: Provide market insights and predictive analytics for informed decision-making.</li>
-<li>Real-time Updates: Ensure timely information about crop availability, market demands, and pricing.</li>
+<li>Product listing and search: Enabled farmers to list their produce with relevant details and consumers to search for specific products based on their preferences or requirements</li>
+<li>User authentication and authorization: Implemented a secure login and registration system and authentication system, allowing users to securely access their accounts and manage their profiles.</li>
+<li>Responsive design for mobile view: The website is responsive, accessible and user-friendly across various devices, enabling farmers and consumers to easily navigate and utilize the platform on mobile devices.</li>
 </ul>
 <h2>Usage</h2>
 <h3>User Roles:</h3>
@@ -35,10 +34,10 @@
 </ul>
 <h2>Technologies Used</h2>
 <ul>
-<li>Frontend: HTML, CSS, JavaScript, React.js</li>
-<li>Backend: Node.js, Express.js</li>
-<li>Database: MongoDB</li>
-<li>Additional Tools: Redux, Axios, JWT for authentication</li>
+<li>Frontend: HTML, CSS(bootsrap5), JavaScript</li>
+<li>Backend: Python(Flask)</li>
+<li>Database: MySQL</li>
+<li>Additional Tools: Github</li>
 </ul>
 <h2>Contribution</h2>
 <p>We welcome contributions to HarvestLink. To contribute, follow these steps:</p>
@@ -54,7 +53,7 @@
 <h2>Acknowledgements</h2>
 <p>Special thanks to our mentors and contributors for their invaluable insights and support during the development of HarvestLink.</p>
 <h2>License</h2>
-<p>This project is licensed under the MIT License - see the [LICENSE]<link href="(path/HarvestLink/LICENSE.txt/file)" rel="stylesheet"> file for details.
+<p>This project is licensed under the MIT License - see the [LICENSE]<a href="HarvestLink/LICENSE.txt"> file for details.
 </p>
 </body>
 </html>
