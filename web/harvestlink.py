@@ -51,6 +51,17 @@ def index():
                                authenticated=user_session['authenticated'],
                                products=products)
 
+    for product, farmer in products:
+        # Find the first match in the product name
+        match = pattern.search(product.name)
+
+        if match:
+            image = match.group()
+            product.image = image
+        else:
+            product.image = 'Logo'
+        print(product.image)
+
     return render_template('index.html', products=products)
 
 
