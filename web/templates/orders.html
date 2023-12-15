@@ -98,7 +98,7 @@
                     </td>
                     <td>
                         {% if my_order.status == 'Pending' %}
-                            <a class="btn btn-outline-danger btn-sm" href="" onclick="return confirm('Are you sure you want to cancel {{ my_order.product_name }} from your orders?')">Cancel</a>
+                            <a class="btn btn-outline-danger btn-sm" href="/cancel_order/{{ my_order.id }}" onclick="return confirm('Are you sure you want to cancel {{ my_order.product_name }} from your orders?')">Cancel</a>
                         {% else %}
                             <p>No action needed</p>
                         {% endif %}

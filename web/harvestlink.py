@@ -454,7 +454,8 @@ def farmer_orders():
                 return render_template('process_orders.html',
                                        name=user_session['user_name'],
                                        email=user_session['user_email'],
-                                       authenticated=user_session['authenticated'],
+                                       authenticated=user_session[
+                                           'authenticated'],
                                        my_orders=my_orders)
 
     except Exception as e:
@@ -512,6 +513,30 @@ def decline_order(order_id):
         flash(f"Error declining order: {e}", 'error')
 
     return redirect(url_for('farmer_orders'))
+
+
+@app.route('/cancel_order/<order_id>')
+def cancel_order(order_id):
+    try:
+        # Check if the user is logged in as a consumer
+        if 'user_id' in user_session:
+            # Get the authenticated consumer
+            authenticated_consumer = (db_storage.get_session().query(Consumer)
+                                      .filter_by(id=user_session['user_id'])
+                                      .first())
+
+            if authenticated_consumer:
+                # Call the decline_order method in the Order class
+                Order.decline_order(db_storage.get_session(), order_id,
+                                    authenticated_consumer.id)
+                flash(f"Order {order_id} has been canceled", 'success')
+        else:
+            return redirect(url_for('login'))
+
+    except ValueError as e:
+        flash(f"Error declining order: {e}", 'error')
+
+    return redirect(url_for('orders'))
 
 
 @app.route('/deliver_order/<order_id>')

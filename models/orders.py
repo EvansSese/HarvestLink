@@ -102,6 +102,26 @@ class Order(Base):
             return []
 
     @classmethod
+    def cancel_order(cls, session: Session, order_id, consumer_id):
+        try:
+            # Get the order by ID
+            order = session.query(cls).get(order_id)
+
+            # Check if the order exists and belongs to the provided farmer
+            if order and order.consumer_id == consumer_id:
+                # Change the status of the order to "Declined"
+                order.status = 'Canceled'
+                session.commit()
+                return True
+            else:
+                raise ValueError(
+                    "Order not found or does not belong to the provided consumer")
+
+        except SQLAlchemyError as e:
+            session.rollback()
+            raise ValueError(f"Error cancelling: {e}")
+
+    @classmethod
     def get_orders(cls, session: Session, farmer_id):
         try:
             # Get orders associated with the logged-in farmer
