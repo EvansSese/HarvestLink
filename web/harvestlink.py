@@ -619,4 +619,4 @@ def authenticate_consumer(email, password):
 
 
 if __name__ == '__main__':
-    app.run(host="192.168.16.11", port=5000, debug=True)
+    app.run(debug=True)
