@@ -544,7 +544,7 @@ def cancel_order(order_id):
 
             if authenticated_consumer:
                 # Call the decline_order method in the Order class
-                Order.decline_order(db_storage.get_session(), order_id,
+                Order.cancel_order(db_storage.get_session(), order_id,
                                     authenticated_consumer.id)
                 flash(f"Order {order_id} has been canceled", 'success')
         else:
